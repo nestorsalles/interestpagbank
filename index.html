@@ -14,6 +14,7 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+            flex-direction: column;
         }
         .container {
             background-color: #2c2c2c;
@@ -23,6 +24,7 @@
             width: 100%;
             max-width: 400px;
             text-align: center;
+            margin-bottom: 20px;
         }
         .header {
             display: flex;
@@ -54,6 +56,10 @@
             color: #f0f0f0;
             outline: none;
         }
+        .container input[readonly] {
+            background-color: #3e3e3e;
+            color: #999;
+        }
         .container button {
             width: 100%;
             padding: 10px;
@@ -74,20 +80,30 @@
             font-weight: bold;
             color: #4CAF50;
         }
+        .footer {
+            text-align: center;
+            color: #4CAF50;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <img src="https://img.icons8.com/?size=100&id=rmRfUcO07v6E&format=png&color=1c8914" alt="Ícone"> <!-- Substitua "icone.png" pelo caminho do seu ícone ou imagem -->
+            <img src="icone.png" alt="Ícone"> <!-- Substitua "icone.png" pelo caminho do seu ícone ou imagem -->
             <h2>Calculadora de Juros - PagBank</h2>
         </div>
         <label for="taxa">Taxa de Juros (%)</label>
         <input type="number" id="taxa" value="3.21" step="0.01" readonly>
         <label for="valorLiquido">Valor Líquido Desejado (R$)</label>
         <input type="text" id="valorLiquido" placeholder="Ex: R$ 5.813,07">
+        <label for="valorJuros">Valor do Juros (R$)</label>
+        <input type="text" id="valorJuros" readonly>
         <button onclick="calcularValor()">Calcular</button>
         <div class="result" id="resultado"></div>
+    </div>
+
+    <div class="footer">
+        <p>Desenvolvido por Ricardo Vasconcelos</p>
     </div>
 
     <script>
@@ -98,14 +114,20 @@
             // Remover "R$", pontos e substituir vírgula por ponto para converter em número
             var valorLiquido = parseFloat(valorLiquidoStr.replace("R$", "").replace(/\./g, "").replace(",", ".").trim());
             var valorPassar = valorLiquido / (1 - taxa);
+            var valorJuros = valorPassar - valorLiquido;
             var resultadoDiv = document.getElementById("resultado");
+            var valorJurosField = document.getElementById("valorJuros");
 
             if (!isNaN(valorPassar)) {
                 // Formatar o valor com pontos e vírgulas no estilo brasileiro
                 var valorFormatado = valorPassar.toFixed(2).replace(".", ",").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                var jurosFormatado = valorJuros.toFixed(2).replace(".", ",").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
                 resultadoDiv.innerHTML = "Você deve passar R$ " + valorFormatado;
+                valorJurosField.value = "R$ " + jurosFormatado;
             } else {
                 resultadoDiv.innerHTML = "Por favor, insira um valor líquido desejado válido.";
+                valorJurosField.value = "";
             }
         }
     </script>
