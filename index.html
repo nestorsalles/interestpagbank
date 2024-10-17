@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Juros PagBank</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1e1e1e;
+            color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+        .container {
+            background-color: #2c2c2c;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .header img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+        .header h2 {
+            font-size: 24px;
+            color: #4CAF50;
+        }
+        .container label {
+            display: block;
+            margin-top: 15px;
+            text-align: left;
+        }
+        .container input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #555;
+            background-color: #3e3e3e;
+            color: #f0f0f0;
+            outline: none;
+        }
+        .container input[readonly] {
+            background-color: #3e3e3e;
+            color: #999;
+        }
+        .container button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            border-radius: 5px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .container button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        .footer {
+            text-align: center;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://img.icons8.com/?size=100&id=O77ZGV2Pygi6&format=png&color=40C057" alt="Ícone"> <!-- Substitua "icone.png" pelo caminho do seu ícone ou imagem -->
+            <h2>Interest Calculator - PagBank</h2>
+        </div>
+        <label for="taxa">Interest Rate (%)</label>
+        <input type="number" id="taxa" value="3.21" step="0.01" readonly>
+        <label for="valorLiquido">Desired Net Value (R$)</label>
+        <input type="text" id="valorLiquido" placeholder="Ex: R$ 5.813,07">
+        <label for="valorJuros">Interest Amount (R$)</label>
+        <input type="text" id="valorJuros" readonly>
+        <button onclick="calcularValor()">Calculate</button>
+        <div class="result" id="resultado"></div>
+    </div>
+
+    <div class="footer">
+        <p>Create by Nestor Salles</p>
+    </div>
+
+    <script>
+        function calcularValor() {
+            var taxa = parseFloat(document.getElementById("taxa").value) / 100;
+            var valorLiquidoStr = document.getElementById("valorLiquido").value;
+
+            // Remover "R$", pontos e substituir vírgula por ponto para converter em número
+            var valorLiquido = parseFloat(valorLiquidoStr.replace("R$", "").replace(/\./g, "").replace(",", ".").trim());
+            var valorPassar = valorLiquido / (1 - taxa);
+            var valorJuros = valorPassar - valorLiquido;
+            var resultadoDiv = document.getElementById("resultado");
+            var valorJurosField = document.getElementById("valorJuros");
+
+            if (!isNaN(valorPassar)) {
+                // Formatar o valor com pontos e vírgulas no estilo brasileiro
+                var valorFormatado = valorPassar.toFixed(2).replace(".", ",").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                var jurosFormatado = valorJuros.toFixed(2).replace(".", ",").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+                resultadoDiv.innerHTML = "Você deve passar R$ " + valorFormatado;
+                valorJurosField.value = "R$ " + jurosFormatado;
+            } else {
+                resultadoDiv.innerHTML = "Por favor, insira um valor líquido desejado válido.";
+                valorJurosField.value = "";
+            }
+        }
+    </script>
+</body>
+</html>
